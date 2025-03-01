@@ -20,3 +20,11 @@ resource "aws_security_group" "ec2-sg"{
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
+resource "aws_instance" "ec2" {
+    ami = ""
+    instance_type = "t2.micro"
+    security_groups = ["${aws_security_group.ec2-sg.name}"]
+    tags={
+        Name="WebServer"
+    }
+}
