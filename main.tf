@@ -28,3 +28,10 @@ resource "aws_instance" "ec2" {
         Name="WebServer"
     }
 }
+
+resource "aws_sns_topic" "topic" {
+    name="note"
+    lambda_failure_feedback_role_arn = ""
+    lambda_success_feedback_role_arn = ""
+    lambda_success_feedback_sample_rate = "100"
+}
