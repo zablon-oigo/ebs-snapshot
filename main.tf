@@ -6,8 +6,8 @@ provider "aws" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_file = "lambda_function.py" 
-  output_path = "${path.module}/lambda_function.zip" 
+  source_file = "lambda_function.py"
+  output_path = "${path.module}/lambda_function.zip"
 }
 
 # Lambda function
@@ -36,14 +36,14 @@ resource "aws_sns_topic_subscription" "subscription" {
 resource "aws_security_group" "ec2-sg" {
   name        = "demo"
   description = "Security group to allow traffic to EC2"
-  
+
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -57,7 +57,7 @@ resource "aws_instance" "ec2" {
   ami             = ""
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.ec2-sg.name]
-  
+
   tags = {
     Name = "WebServer"
   }
