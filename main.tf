@@ -1,7 +1,7 @@
 provider "aws" {
-  region     = ""
-  access_key = ""
-  secret_key = ""
+  region     = "${var.region}"
+  access_key = "${var.access_key}"
+  secret_key = "${var.secret_key}"
 }
 
 data "archive_file" "lambda_zip" {
@@ -14,15 +14,20 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = "test"
-  role             = ""
+  role             = "${var.lambda_role}"
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.9"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 }
 
 # SNS topic 
+		
+
 resource "aws_sns_topic" "topic" {
   name = "note"
+  lambda_success_feedback_sample_rate = "100"           
+  lambda_success_feedback_role_arn = "${var.feedback_role_arn}"          
+  lambda_failure_feedback_role_arn  ="${var.feedback_role_arn}"  
 }
 
 # SNS subscription for Lambda
@@ -54,7 +59,7 @@ resource "aws_security_group" "ec2-sg" {
 
 # EC2 instance
 resource "aws_instance" "ec2" {
-  ami             = ""
+  ami             = "${var.ami}"
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.ec2-sg.name]
 
