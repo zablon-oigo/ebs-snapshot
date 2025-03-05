@@ -90,4 +90,23 @@ resource "aws_cloudwatch_event_rule" "event" {
   }
 }
 EOF
-}			
+}		
+
+# SNS Destination to Lambda Function
+resource "aws_cloudwatch_event_target" "sns" {
+  rule      = aws_cloudwatch_event_rule.event.name
+  target_id = "SendToSNS"
+  arn       = aws_sns_topic.topic.arn
+}
+
+resource "aws_lambda_function_event_invoke_config" "sns" {
+  function_name = aws_lambda_function.lambda.function_name
+  destination_config {
+    on_failure {
+      destination = aws_sns_topic.topic.arn
+    }
+    on_success {
+      destination = aws_sns_topic.topic.arn
+    }
+  }
+}
