@@ -67,3 +67,27 @@ resource "aws_instance" "ec2" {
     Name = "WebServer"
   }
 }
+
+# CloudWatch Event Rule
+resource "aws_cloudwatch_event_rule" "event" {
+  name        = "t3st"
+  schedule_expression = "rate(1 hour)"
+  event_pattern = <<EOF
+    {
+  "source": [
+    "aws.ec2"
+  ],
+  "detail-type": [
+    "EC2 Instance State-change Notification"
+  ],
+  "detail": {
+    "state": [
+      "stopped"
+    ],
+    "instance-id": [
+      "${aws_instance.ec2.id}"
+      ]
+  }
+}
+EOF
+}			
