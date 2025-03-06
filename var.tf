@@ -9,5 +9,5 @@ variable "ami" {
 variable "lambda_role" {
 }
 variable "feedback_role_arn" {
-  
+
 }
